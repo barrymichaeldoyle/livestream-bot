@@ -1,5 +1,8 @@
 import { ChatClient } from "@twurple/chat";
-import { invalidNumberMessages } from "../../utils/invalidMessages";
+import {
+  getRandomMessage,
+  invalidNumberMessages,
+} from "../../utils/invalidMessages";
 import { rollDice } from "../../utils/rollDice";
 
 export function rollCommand({
@@ -24,10 +27,7 @@ export function rollCommand({
   const sidesInputNumber = parseInt(sidesInput);
 
   if (!sidesInputNumber || sidesInputNumber < 1 || sidesInput.includes(".")) {
-    const randomMessage =
-      invalidNumberMessages[
-        Math.floor(Math.random() * invalidNumberMessages.length)
-      ];
+    const randomMessage = getRandomMessage(invalidNumberMessages);
     return chatClient.say(channel, `@${user} ${randomMessage}`);
   }
 

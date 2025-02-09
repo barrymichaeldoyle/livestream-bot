@@ -48,3 +48,34 @@ export const notEnoughPointsMessages = [
   "Points required: More than you'll ever have.",
   "Have you tried not being poor? Just a suggestion.",
 ];
+
+export const invalidCommandMessages = [
+  "Nice try, but no one's impressed by your typing mistakes.",
+  "Your command is as useful as a screen door on a submarine.",
+  "Is this a new type of command, or did you just hit random keys?",
+  "I've seen more valid commands from a potato.",
+  "That command was more broken than your sense of direction.",
+  "Do you even know what a command is?",
+  "Error: The brain cell required to process that command has left the chat.",
+  "Congratulations, you've just invented a new form of failure.",
+  "I'm sorry, did you mean to send that, or was your keyboard just on autopilot?",
+  "Try harder. Or at least, try anything at all.",
+  "That command was like a bad joke. I didn't get it, and neither should you.",
+  "Did you just invent a new type of nonsense?",
+  "Nice attempt, but your command doesn't exist in any known universe.",
+  "Your command was rejected faster than your last date.",
+  "You sure you didn't just hit the keyboard with your face?",
+  "The only thing more broken than that command is your logic.",
+  "I'm sorry, but that's not a valid command. Try again with some actual effort.",
+  "That command is invalid, but so is your grasp on reality.",
+  "Your keyboard called. It wants you to stop abusing it.",
+  "Nice try, but that's a no from me. And from the command list.",
+  "What you just entered is more random than a squirrel on caffeine.",
+  "I'm sorry, did you think that would work?",
+  "That command is about as useful as a screen in a swimming pool.",
+  "You can try again, but I'm not sure it'll help.",
+];
+
+export function getRandomMessage(messages: string[]) {
+  return messages[Math.floor(Math.random() * messages.length)];
+}

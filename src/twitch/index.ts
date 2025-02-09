@@ -11,6 +11,11 @@ import { rollCommand } from "./commands/roll";
 import { giveCommand } from "./commands/give";
 import { leaderboardCommand } from "./commands/leaderboard";
 import { weatherCommand } from "./commands/weather";
+import { repoCommand } from "./commands/repo";
+import {
+  getRandomMessage,
+  invalidCommandMessages,
+} from "../utils/invalidMessages";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -52,7 +57,7 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
     const [command, ...args] = text.toLowerCase().split(" ");
 
     if (command === "!roll") {
-      rollCommand({
+      return rollCommand({
         user,
         chatClient,
         channel,
@@ -61,7 +66,7 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
       });
     }
     if (command === "!dice" || command === "!dics") {
-      rollCommand({
+      return rollCommand({
         user,
         chatClient,
         channel,
@@ -71,15 +76,15 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
     }
 
     if (command === "!points") {
-      pointsCommand({ user, chatClient, channel });
+      return pointsCommand({ user, chatClient, channel });
     }
 
     if (command === "!gamble") {
-      gambleCommand({ amount: args[0], user, chatClient, channel });
+      return gambleCommand({ amount: args[0], user, chatClient, channel });
     }
 
     if (command === "!give") {
-      giveCommand({
+      return giveCommand({
         giver: user,
         receiver: args[0],
         amount: args[1],
@@ -89,11 +94,25 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
     }
 
     if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
-      leaderboardCommand({ user, chatClient, channel });
+      return leaderboardCommand({ user, chatClient, channel });
     }
 
     if (command === "!weather") {
-      weatherCommand({ user, chatClient, channel });
+      return weatherCommand({ user, chatClient, channel });
     }
+
+    if (command === "!repo") {
+      return repoCommand({ user, chatClient, channel });
+    }
+
+    if (["!help", "!command"].includes(command)) {
+      return chatClient.say(
+        channel,
+        `@${user} checkout out the commands panel in the about section for a list of commands you can use!`
+      );
+    }
+
+    const randomMessage = getRandomMessage(invalidCommandMessages);
+    return chatClient.say(channel, `@${user} ${randomMessage}`);
   }
 });

@@ -1,5 +1,6 @@
 import { ChatClient } from "@twurple/chat";
 import {
+  getRandomMessage,
   invalidNumberMessages,
   notEnoughPointsMessages,
 } from "../../utils/invalidMessages";
@@ -22,20 +23,14 @@ export function giveCommand({
     amount.toLowerCase() === "all" ? getPoints(giver) : parseInt(amount);
 
   if (isNaN(pointsToGive) || pointsToGive <= 0) {
-    const randomMessage =
-      invalidNumberMessages[
-        Math.floor(Math.random() * invalidNumberMessages.length)
-      ];
+    const randomMessage = getRandomMessage(invalidNumberMessages);
     return chatClient.say(channel, `@${giver} ${randomMessage}`);
   }
 
   const giverPoints = getPoints(giver);
 
   if (giverPoints < pointsToGive) {
-    const randomMessage =
-      notEnoughPointsMessages[
-        Math.floor(Math.random() * notEnoughPointsMessages.length)
-      ];
+    const randomMessage = getRandomMessage(notEnoughPointsMessages);
     return chatClient.say(channel, `@${giver} ${randomMessage}`);
   }
 
@@ -48,8 +43,7 @@ export function giveCommand({
   removePoints(giver, -pointsToGive);
   addPoints(receiver, pointsToGive);
 
-  const randomMessage =
-    giveMessages[Math.floor(Math.random() * giveMessages.length)];
+  const randomMessage = getRandomMessage(giveMessages);
 
   chatClient.say(
     channel,

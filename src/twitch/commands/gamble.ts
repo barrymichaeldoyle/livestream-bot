@@ -7,6 +7,7 @@ import {
   removePoints,
 } from "../pointsFileManager";
 import {
+  getRandomMessage,
   invalidNumberMessages,
   notEnoughPointsMessages,
 } from "../../utils/invalidMessages";
@@ -34,19 +35,13 @@ export function gambleCommand({
     amount.toLowerCase() === "all" ? getPoints(user) : parseInt(amount);
 
   if (isNaN(betAmount) || betAmount <= 0) {
-    const randomMessage =
-      invalidNumberMessages[
-        Math.floor(Math.random() * invalidNumberMessages.length)
-      ];
+    const randomMessage = getRandomMessage(invalidNumberMessages);
     return chatClient.say(channel, `@${user} ${randomMessage}`);
   }
 
   const userPoints = getPoints(user);
   if (betAmount > userPoints) {
-    const randomMessage =
-      notEnoughPointsMessages[
-        Math.floor(Math.random() * notEnoughPointsMessages.length)
-      ];
+    const randomMessage = getRandomMessage(notEnoughPointsMessages);
     return chatClient.say(channel, `@${user} ${randomMessage}`);
   }
 
