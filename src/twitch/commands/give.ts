@@ -18,7 +18,8 @@ export function giveCommand({
   receiver: string;
   amount: string;
 }) {
-  const pointsToGive = parseInt(amount);
+  const pointsToGive =
+    amount.toLowerCase() === "all" ? getPoints(giver) : parseInt(amount);
 
   if (isNaN(pointsToGive) || pointsToGive <= 0) {
     const randomMessage =

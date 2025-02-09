@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { pluralize } from "../utils/pluralize";
 
 const POINTS_FILE = path.join(__dirname, "../../data/points.json");
 
@@ -46,4 +47,9 @@ export function removePoints(user: string, amount: number): boolean {
 
 function formatUserForDb(user: string): string {
   return user.toLowerCase().replace(/@/g, "");
+}
+
+export function getPointsMessage(user: string): string {
+  const points = getPoints(user);
+  return `You have ${points} ${pluralize(points, "point", "points")}.`;
 }

@@ -18,6 +18,7 @@ interface EnvConfig {
   TWITCH_BOT_CLIENT_ID: string;
   TWITCH_BOT_REFRESH_TOKEN: string;
   TWITCH_CHANNEL_NAME: string;
+  WEATHER_API_KEY: string;
   PORT: number;
 }
 
@@ -37,5 +38,6 @@ export const config: EnvConfig = {
   TWITCH_BOT_CLIENT_ID: getEnvVariable("TWITCH_BOT_CLIENT_ID"),
   TWITCH_BOT_REFRESH_TOKEN: getEnvVariable("TWITCH_BOT_REFRESH_TOKEN"),
   TWITCH_CHANNEL_NAME: getEnvVariable("TWITCH_CHANNEL_NAME"),
+  WEATHER_API_KEY: getEnvVariable("WEATHER_API_KEY"),
   PORT: Number(getEnvVariable("PORT", false)) || 3000,
 };

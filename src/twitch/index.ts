@@ -10,6 +10,7 @@ import { gambleCommand } from "./commands/gamble";
 import { rollCommand } from "./commands/roll";
 import { giveCommand } from "./commands/give";
 import { leaderboardCommand } from "./commands/leaderboard";
+import { weatherCommand } from "./commands/weather";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -48,7 +49,7 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
   const isCommand = text.startsWith("!");
 
   if (isCommand) {
-    const [command, ...args] = text.split(" ");
+    const [command, ...args] = text.toLowerCase().split(" ");
 
     if (command === "!roll") {
       rollCommand({
@@ -89,6 +90,10 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
 
     if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
       leaderboardCommand({ user, chatClient, channel });
+    }
+
+    if (command === "!weather") {
+      weatherCommand({ user, chatClient, channel });
     }
   }
 });
