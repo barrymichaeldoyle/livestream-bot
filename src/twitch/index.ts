@@ -16,6 +16,7 @@ import {
   getRandomMessage,
   invalidCommandMessages,
 } from "../utils/invalidMessages";
+import { timeCommand } from "./commands/time";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -110,6 +111,10 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
         channel,
         `@${user} checkout out the commands panel in the about section for a list of commands you can use!`
       );
+    }
+
+    if (command === "!time") {
+      return timeCommand({ user, chatClient, channel });
     }
 
     const randomMessage = getRandomMessage(invalidCommandMessages);
