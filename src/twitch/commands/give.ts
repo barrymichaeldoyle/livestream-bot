@@ -40,7 +40,7 @@ export function giveCommand({
   }
 
   // Transfer the points
-  removePoints(giver, -pointsToGive);
+  removePoints(giver, pointsToGive);
   addPoints(receiver, pointsToGive);
 
   const randomMessage = getRandomMessage(giveMessages);

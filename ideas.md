@@ -14,3 +14,8 @@
 ---
 
 UI for chat achievements, leaderboard etc.
+
+TODO: amount.toLowerCase() for "odds" doesn't work
+
+- Fix give mechanic
+- Find some way to punish bot gambling
