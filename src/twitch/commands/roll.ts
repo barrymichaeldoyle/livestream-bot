@@ -16,7 +16,7 @@ export function rollCommand({
   chatClient: ChatClient;
   channel: string;
   rollType: "dice" | "roll";
-  sides: string;
+  sides?: string;
 }) {
   const sidesInput =
     sides ||

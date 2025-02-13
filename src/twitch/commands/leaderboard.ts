@@ -2,11 +2,9 @@ import { ChatClient } from "@twurple/chat";
 import { loadPoints } from "../pointsFileManager";
 
 export function leaderboardCommand({
-  user,
   chatClient,
   channel,
 }: {
-  user: string;
   chatClient: ChatClient;
   channel: string;
 }) {

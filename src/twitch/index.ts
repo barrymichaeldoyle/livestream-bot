@@ -17,6 +17,8 @@ import {
   invalidCommandMessages,
 } from "../utils/invalidMessages";
 import { timeCommand } from "./commands/time";
+import { RouletteGame } from "./games/roulette";
+import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -29,6 +31,8 @@ export const chatClient = new ChatClient({
 });
 
 const apiClient = new ApiClient({ authProvider });
+
+const rouletteGame = new RouletteGame(chatClient, config.TWITCH_CHANNEL_NAME);
 
 chatClient.onConnect(() => {
   console.log("Bot connected to Twitch");
@@ -84,6 +88,21 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
       return gambleCommand({ amount: args[0], user, chatClient, channel });
     }
 
+    if (command === "!roulette") {
+      return rouletteGame.startGame();
+    }
+
+    if (command === "!r") {
+      return placeRouletteBetCommand({
+        betType: args[0],
+        amount: args[1],
+        user,
+        chatClient,
+        channel,
+        rouletteGame,
+      });
+    }
+
     if (command === "!give") {
       return giveCommand({
         giver: user,
@@ -95,7 +114,7 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
     }
 
     if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
-      return leaderboardCommand({ user, chatClient, channel });
+      return leaderboardCommand({ chatClient, channel });
     }
 
     if (command === "!weather") {

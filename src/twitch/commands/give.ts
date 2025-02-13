@@ -16,9 +16,14 @@ export function giveCommand({
   giver: string;
   chatClient: ChatClient;
   channel: string;
-  receiver: string;
-  amount: string;
+  receiver?: string;
+  amount?: string;
 }) {
+  if (!amount) {
+    const randomMessage = getRandomMessage(invalidNumberMessages);
+    return chatClient.say(channel, `@${giver} ${randomMessage}`);
+  }
+
   const pointsToGive =
     amount.toLowerCase() === "all" ? getPoints(giver) : parseInt(amount);
 
@@ -31,6 +36,12 @@ export function giveCommand({
 
   if (giverPoints < pointsToGive) {
     const randomMessage = getRandomMessage(notEnoughPointsMessages);
+    return chatClient.say(channel, `@${giver} ${randomMessage}`);
+  }
+
+  if (!receiver) {
+    // TODO: change this with invalid receiveMessages
+    const randomMessage = getRandomMessage(invalidNumberMessages);
     return chatClient.say(channel, `@${giver} ${randomMessage}`);
   }
 

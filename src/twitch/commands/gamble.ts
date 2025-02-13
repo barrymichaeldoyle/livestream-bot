@@ -19,15 +19,20 @@ export function gambleCommand({
   chatClient,
   channel,
 }: {
-  amount: string;
+  amount?: string;
   user: string;
   chatClient: ChatClient;
   channel: string;
 }) {
+  if (!amount) {
+    const randomMessage = getRandomMessage(invalidNumberMessages);
+    return chatClient.say(channel, `@${user} ${randomMessage}`);
+  }
+
   if (amount.toLowerCase() === "odds") {
     return chatClient.say(
       channel,
-      `@${user} you roll a d100! 🎰 Roll a 100, and you win 3x your bet! 🔥🚀 Roll between 91 and 99 (inclusive), and you win 2x your bet! 🎉 Roll between 50 and 90 (exclusive), and you win 1.5x your bet! 🎉 Roll 50 or lower, and you lose your bet! ❌`
+      `@${user} you roll a d100! 🎰 Roll a 100, and you win 3x your bet! 🔥🚀 Roll between 91 and 99 (inclusive), and you win 2x your bet! 🎉 Roll between 50 and 90 (exclusive), and you win 1.5x your bet! 🎉 Roll 50 or lower, and you lose your bet! ❌ Roll 1 and you lose everything! 💸`
     );
   }
 
@@ -51,7 +56,10 @@ export function gambleCommand({
   let message = `@${user} rolled a ${roll}... `;
   const wonPointsStr = pluralize(winnings, "point", "points");
 
-  if (roll <= 50) {
+  if (roll === 1) {
+    removePoints(user, getPoints(user));
+    message += `You rolled a 1! 💸 You lost all your points! 💸`;
+  } else if (roll <= 50) {
     removePoints(user, betAmount);
     message += `Oof. You lost ${betAmount} ${wonPointsStr}. Sucks to be you. ❌`;
   } else if (roll <= 90) {
