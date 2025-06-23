@@ -19,6 +19,7 @@ import {
 import { timeCommand } from "./commands/time";
 import { RouletteGame } from "./games/roulette";
 import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
+import { COMMANDS_VALUES } from "../constant";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -60,6 +61,10 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
 
   if (isCommand) {
     const [command, ...args] = text.toLowerCase().split(" ");
+
+    if (command === "!today") {
+      return chatClient.say(channel, COMMANDS_VALUES.today);
+    }
 
     if (command === "!roll") {
       return rollCommand({
