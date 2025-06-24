@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "nodemon": "3.1.10",
-    "patch-pulse": "2.5.4",
     "ts-node": "10.9.2"
   }
 }
