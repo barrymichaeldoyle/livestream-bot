@@ -20,6 +20,7 @@ import { timeCommand } from "./commands/time";
 import { RouletteGame } from "./games/roulette";
 import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
 import { COMMANDS_VALUES } from "../constant";
+import { soCommand } from "./commands/so";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -57,10 +58,24 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
   activeUsers.add(user);
   console.log(channel, user, text, activeUsers);
 
+  const isMe = user === channel;
   const isCommand = text.startsWith("!");
 
   if (isCommand) {
     const [command, ...args] = text.toLowerCase().split(" ");
+
+    /**
+     * Commands that only I can use
+     */
+    if (isMe) {
+      if (command === "!so") {
+        return soCommand({
+          shoutoutChannel: args[0],
+          chatClient,
+          channel,
+        });
+      }
+    }
 
     if (command === "!today") {
       return chatClient.say(channel, COMMANDS_VALUES.today);
