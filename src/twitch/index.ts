@@ -21,6 +21,7 @@ import { RouletteGame } from "./games/roulette";
 import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
 import { COMMANDS_VALUES } from "../constant";
 import { soCommand } from "./commands/so";
+import { goodIdeasCommand } from "./commands/goodideas";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -70,6 +71,7 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
     if (isMe) {
       if (command === "!so") {
         return soCommand({
+          apiClient,
           shoutoutChannel: args[0],
           chatClient,
           channel,
@@ -133,6 +135,10 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
       });
     }
 
+    if (["!goodideas", "!gi"].includes(command)) {
+      return goodIdeasCommand({ chatClient, channel });
+    }
+
     if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
       return leaderboardCommand({ chatClient, channel });
     }
@@ -143,6 +149,27 @@ chatClient.onMessage(async (channel: string, user: string, text: string) => {
 
     if (command === "!repo") {
       return repoCommand({ user, chatClient, channel });
+    }
+
+    if (["!yt", "!youtube"].includes(command)) {
+      return chatClient.say(
+        channel,
+        `Barry has a YouTube Channel: https://youtube.com/barrymichaeldoyle`
+      );
+    }
+
+    if (["!gh", "!github"].includes(command)) {
+      return chatClient.say(
+        channel,
+        `Barry has GitHub: https://github.com/barrymichaeldoyle`
+      );
+    }
+
+    if (["!pp", "!patchpulse"].includes(command)) {
+      return chatClient.say(
+        channel,
+        `Check out Barry's devtool project Patch Pulse: https://github.com/Patch-Pulse/cli (give it a ⭐)`
+      );
     }
 
     if (["!help", "!command"].includes(command)) {

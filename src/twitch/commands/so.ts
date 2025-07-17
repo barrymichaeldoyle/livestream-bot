@@ -1,19 +1,22 @@
 import { ChatClient } from "@twurple/chat";
 import { getRandomMessage } from "../../utils/invalidMessages";
+import { ApiClient } from "@twurple/api";
 
 /**
  * A command for the streamer to shoutout a channel.
  */
 export function soCommand({
+  apiClient,
   shoutoutChannel,
   chatClient,
   channel,
 }: {
+  apiClient: ApiClient;
   shoutoutChannel: string;
   chatClient: ChatClient;
   channel: string;
 }) {
-  chatClient.say(channel, `/shoutout ${shoutoutChannel}`);
+  apiClient.chat.shoutoutUser(channel, shoutoutChannel);
 
   // Get a random message and replace the placeholder with the actual channel name
   const randomMessage = getRandomMessage(shoutoutMessages);
