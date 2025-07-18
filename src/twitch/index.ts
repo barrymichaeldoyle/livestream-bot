@@ -20,7 +20,7 @@ import { timeCommand } from "./commands/time";
 import { RouletteGame } from "./games/roulette";
 import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
 import { COMMANDS_VALUES } from "../constant";
-import { soCommand } from "./commands/so";
+import { shoutoutCommand } from "./commands/shoutout";
 import { goodIdeasCommand } from "./commands/goodideas";
 import { lurkCommand } from "./commands/lurk";
 import { unlurkCommand } from "./commands/unlurk";
@@ -73,8 +73,8 @@ chatClient.onMessage(
        * Commands that only I can use
        */
       if (isMe) {
-        if (command === "!so") {
-          return soCommand({
+        if (["!so", "!shoutout"].includes(command)) {
+          return shoutoutCommand({
             apiClient,
             shoutoutChannel: args[0],
             chatClient,

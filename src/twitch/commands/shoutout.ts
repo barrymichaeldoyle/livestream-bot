@@ -6,7 +6,7 @@ import { getRandomMessage } from "../../utils/invalidMessages";
 /**
  * A command for the streamer to shoutout a channel.
  */
-export function soCommand({
+export function shoutoutCommand({
   apiClient,
   shoutoutChannel,
   chatClient,
