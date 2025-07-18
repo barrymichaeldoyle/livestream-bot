@@ -1,6 +1,7 @@
 import { ChatClient } from "@twurple/chat";
-import { getRandomMessage } from "../../utils/invalidMessages";
 import { ApiClient } from "@twurple/api";
+
+import { getRandomMessage } from "../../utils/invalidMessages";
 
 /**
  * A command for the streamer to shoutout a channel.

@@ -1,6 +1,6 @@
 import { ApiClient } from "@twurple/api";
 import { StaticAuthProvider } from "@twurple/auth";
-import { ChatClient } from "@twurple/chat";
+import { ChatClient, ChatMessage } from "@twurple/chat";
 
 import { config } from "../config/env";
 import { addPoints } from "./pointsFileManager";
@@ -22,6 +22,8 @@ import { placeRouletteBetCommand } from "./commands/placeRouletteBet";
 import { COMMANDS_VALUES } from "../constant";
 import { soCommand } from "./commands/so";
 import { goodIdeasCommand } from "./commands/goodideas";
+import { lurkCommand } from "./commands/lurk";
+import { unlurkCommand } from "./commands/unlurk";
 
 const authProvider = new StaticAuthProvider(
   config.TWITCH_BOT_CLIENT_ID,
@@ -55,135 +57,146 @@ setInterval(() => {
   activeUsers.clear();
 }, 300_000);
 
-chatClient.onMessage(async (channel: string, user: string, text: string) => {
-  activeUsers.add(user);
-  console.log(channel, user, text, activeUsers);
+chatClient.onMessage(
+  async (channel: string, user: string, text: string, msg: ChatMessage) => {
+    activeUsers.add(user);
+    console.log(channel, user, text, activeUsers);
 
-  const isMe = user === channel;
-  const isCommand = text.startsWith("!");
+    const isMe = user === channel;
+    const isCommand = text.startsWith("!");
+    const userDisplayName = `@${msg.userInfo.displayName}`;
 
-  if (isCommand) {
-    const [command, ...args] = text.toLowerCase().split(" ");
+    if (isCommand) {
+      const [command, ...args] = text.toLowerCase().split(" ");
 
-    /**
-     * Commands that only I can use
-     */
-    if (isMe) {
-      if (command === "!so") {
-        return soCommand({
-          apiClient,
-          shoutoutChannel: args[0],
+      /**
+       * Commands that only I can use
+       */
+      if (isMe) {
+        if (command === "!so") {
+          return soCommand({
+            apiClient,
+            shoutoutChannel: args[0],
+            chatClient,
+            channel,
+          });
+        }
+      }
+
+      if (command === "!today") {
+        return chatClient.say(channel, COMMANDS_VALUES.today);
+      }
+
+      if (command === "!roll") {
+        return rollCommand({
+          user,
+          chatClient,
+          channel,
+          rollType: "roll",
+          sides: args[0],
+        });
+      }
+      if (command === "!dice" || command === "!dics") {
+        return rollCommand({
+          user,
+          chatClient,
+          channel,
+          rollType: "dice",
+          sides: args[0],
+        });
+      }
+
+      if (command === "!points") {
+        return pointsCommand({ user, chatClient, channel });
+      }
+
+      if (command === "!gamble") {
+        return gambleCommand({ amount: args[0], user, chatClient, channel });
+      }
+
+      if (command === "!roulette") {
+        return rouletteGame.startGame();
+      }
+
+      if (command === "!r") {
+        return placeRouletteBetCommand({
+          betType: args[0],
+          amount: args[1],
+          user,
+          chatClient,
+          channel,
+          rouletteGame,
+        });
+      }
+
+      if (command === "!give") {
+        return giveCommand({
+          giver: user,
+          receiver: args[0],
+          amount: args[1],
           chatClient,
           channel,
         });
       }
-    }
 
-    if (command === "!today") {
-      return chatClient.say(channel, COMMANDS_VALUES.today);
-    }
+      if (command === "!lurk") {
+        return lurkCommand({ chatClient, channel, userDisplayName });
+      }
 
-    if (command === "!roll") {
-      return rollCommand({
-        user,
-        chatClient,
-        channel,
-        rollType: "roll",
-        sides: args[0],
-      });
-    }
-    if (command === "!dice" || command === "!dics") {
-      return rollCommand({
-        user,
-        chatClient,
-        channel,
-        rollType: "dice",
-        sides: args[0],
-      });
-    }
+      if (command === "!unlurk") {
+        return unlurkCommand({ chatClient, channel, userDisplayName });
+      }
 
-    if (command === "!points") {
-      return pointsCommand({ user, chatClient, channel });
-    }
+      if (["!goodideas", "!gi"].includes(command)) {
+        return goodIdeasCommand({ chatClient, channel });
+      }
 
-    if (command === "!gamble") {
-      return gambleCommand({ amount: args[0], user, chatClient, channel });
-    }
+      if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
+        return leaderboardCommand({ chatClient, channel });
+      }
 
-    if (command === "!roulette") {
-      return rouletteGame.startGame();
-    }
+      if (command === "!weather") {
+        return weatherCommand({ user, chatClient, channel });
+      }
 
-    if (command === "!r") {
-      return placeRouletteBetCommand({
-        betType: args[0],
-        amount: args[1],
-        user,
-        chatClient,
-        channel,
-        rouletteGame,
-      });
-    }
+      if (command === "!repo") {
+        return repoCommand({ user, chatClient, channel });
+      }
 
-    if (command === "!give") {
-      return giveCommand({
-        giver: user,
-        receiver: args[0],
-        amount: args[1],
-        chatClient,
-        channel,
-      });
-    }
+      if (["!yt", "!youtube"].includes(command)) {
+        return chatClient.say(
+          channel,
+          `Barry has a YouTube Channel: https://youtube.com/barrymichaeldoyle`
+        );
+      }
 
-    if (["!goodideas", "!gi"].includes(command)) {
-      return goodIdeasCommand({ chatClient, channel });
-    }
+      if (["!gh", "!github"].includes(command)) {
+        return chatClient.say(
+          channel,
+          `Barry has GitHub: https://github.com/barrymichaeldoyle`
+        );
+      }
 
-    if (["!leaderboard", "!toppoints", "!lb", "!tp"].includes(command)) {
-      return leaderboardCommand({ chatClient, channel });
-    }
+      if (["!pp", "!patchpulse"].includes(command)) {
+        return chatClient.say(
+          channel,
+          `Check out Barry's devtool project Patch Pulse: https://github.com/Patch-Pulse/cli (give it a ⭐)`
+        );
+      }
 
-    if (command === "!weather") {
-      return weatherCommand({ user, chatClient, channel });
-    }
+      if (["!help", "!command"].includes(command)) {
+        return chatClient.say(
+          channel,
+          `@${user} checkout out the commands panel in the about section for a list of commands you can use!`
+        );
+      }
 
-    if (command === "!repo") {
-      return repoCommand({ user, chatClient, channel });
-    }
+      if (command === "!time") {
+        return timeCommand({ user, chatClient, channel });
+      }
 
-    if (["!yt", "!youtube"].includes(command)) {
-      return chatClient.say(
-        channel,
-        `Barry has a YouTube Channel: https://youtube.com/barrymichaeldoyle`
-      );
+      const randomMessage = getRandomMessage(invalidCommandMessages);
+      return chatClient.say(channel, `@${user} ${randomMessage}`);
     }
-
-    if (["!gh", "!github"].includes(command)) {
-      return chatClient.say(
-        channel,
-        `Barry has GitHub: https://github.com/barrymichaeldoyle`
-      );
-    }
-
-    if (["!pp", "!patchpulse"].includes(command)) {
-      return chatClient.say(
-        channel,
-        `Check out Barry's devtool project Patch Pulse: https://github.com/Patch-Pulse/cli (give it a ⭐)`
-      );
-    }
-
-    if (["!help", "!command"].includes(command)) {
-      return chatClient.say(
-        channel,
-        `@${user} checkout out the commands panel in the about section for a list of commands you can use!`
-      );
-    }
-
-    if (command === "!time") {
-      return timeCommand({ user, chatClient, channel });
-    }
-
-    const randomMessage = getRandomMessage(invalidCommandMessages);
-    return chatClient.say(channel, `@${user} ${randomMessage}`);
   }
-});
+);

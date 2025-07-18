@@ -1,3 +1,9 @@
 {
-  "clearmind51": 2
+  "clearmind51": [
+    "Patch-Pulse VSCode Extension: Suggestee to prefetch npm packages onExtension load rather than on active window",
+    "Personal Website: Add sections to the navigation bar."
+  ],
+  "mahybe": [
+    "Stream Idea: The DoyleMichaelBarry Show! (I have no idea wtf, I'll do with that...)"
+  ]
 }
