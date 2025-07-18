@@ -6,13 +6,13 @@ import {
 import { rollDice } from "../../utils/rollDice";
 
 export function rollCommand({
-  user,
+  userDisplayName,
   chatClient,
   channel,
   rollType,
   sides,
 }: {
-  user: string;
+  userDisplayName: string;
   chatClient: ChatClient;
   channel: string;
   rollType: "dice" | "roll";
@@ -28,11 +28,13 @@ export function rollCommand({
 
   if (!sidesInputNumber || sidesInputNumber < 1 || sidesInput.includes(".")) {
     const randomMessage = getRandomMessage(invalidNumberMessages);
-    return chatClient.say(channel, `@${user} ${randomMessage}`);
+    return chatClient.say(channel, `${userDisplayName} ${randomMessage}`);
   }
 
   chatClient.say(
     channel,
-    `@${user} rolled a ${rollDice(sidesInputNumber)} (d${sidesInputNumber})`
+    `${userDisplayName} rolled a ${rollDice(
+      sidesInputNumber
+    )} (d${sidesInputNumber})`
   );
 }

@@ -89,16 +89,16 @@ chatClient.onMessage(
 
       if (command === "!roll") {
         return rollCommand({
-          user,
+          userDisplayName,
           chatClient,
           channel,
           rollType: "roll",
           sides: args[0],
         });
       }
-      if (command === "!dice" || command === "!dics") {
+      if (["!dice", "!dics"].includes(command)) {
         return rollCommand({
-          user,
+          userDisplayName,
           chatClient,
           channel,
           rollType: "dice",
@@ -107,7 +107,7 @@ chatClient.onMessage(
       }
 
       if (command === "!points") {
-        return pointsCommand({ user, chatClient, channel });
+        return pointsCommand({ user, userDisplayName, chatClient, channel });
       }
 
       if (command === "!gamble") {
